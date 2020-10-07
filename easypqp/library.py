@@ -131,6 +131,9 @@ def process_psms(psms, psmtsv, peptidetsv, psm_fdr_threshold, peptide_fdr_thresh
     # Filter psm dataframe
     psms = psms[psms["group_id"].isin(psmtsv_df["group_id"])]
 
+    if psms.size < 1:
+      raise click.ClickException("Failed to find any PSMs.")
+
     # Update gene_id and protein_id
     psms = psms.merge(peptidetsv_df, how="left", left_on="peptide_sequence", right_on="Peptide")
     psms.drop(["gene_id", "protein_id"], inplace=True, axis=1)
